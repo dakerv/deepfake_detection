@@ -69,7 +69,7 @@ This saves a model snapshot to `backend/models/model.pth`.
 
 Datasets and classes
 --------------------
-Primary dataset used for model experiments: FaceForensics++ (frames extracted and treated as images). The project groups manipulation types into three classes for training and inference:
+The primary dataset used for model experiments: FaceForensics++ (frames extracted and treated as images). The project groups manipulation types into three classes for training and inference:
 
 - **Class 0 — Real:** Unmanipulated images
 - **Class 1 — Face-swapped deepfake:** FaceSwap / Face2Face / DeepFakes-style manipulations
