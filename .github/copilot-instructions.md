@@ -1,26 +1,28 @@
 # Copilot Instructions for is-this-real
 
 ## Project Overview
-This is a **Create React App (CRA)** project using React 19 with Tailwind CSS for styling. The project is in early stages with a standard CRA scaffold and recently integrated Tailwind (v4.1.18) via craco.
+This is a **Create React App (CRA)** project using React 19 + TypeScript with Tailwind CSS for styling. The project is configured with Tailwind CSS (v4.1.18) and fully typed with TypeScript.
 
 **Key files:**
-- [src/App.js](../src/App.js) - Root React component
-- [src/index.js](../src/index.js) - App entry point with ReactDOM rendering
+- [src/App.tsx](../src/App.tsx) - Root React component
+- [src/index.tsx](../src/index.tsx) - App entry point with ReactDOM rendering
+- [tsconfig.json](../tsconfig.json) - TypeScript configuration
 - [package.json](../package.json) - Dependencies and npm scripts
 
 ## Architecture & Setup
 
 ### Build System
-- **Runner:** Create React App (react-scripts 5.0.1)
+- **Runner:** Create React App with Craco (@craco/craco 7.1.0) for CRA configuration without ejecting
+- **Language:** TypeScript 4.9.5 (strict mode enabled)
 - **CSS Framework:** Tailwind CSS v4.1.18 with PostCSS
-- **Build Tool:** Craco (@craco/craco 7.1.0) for CRA configuration without ejecting
-- **Status:** Tailwind dependencies installed but configuration files not yet created
+- **React:** 19.2.4 with React 19 JSX transform (`jsx: "react-jsx"`)
+- **Status:** ✅ Fully configured with Tailwind + TypeScript
 
-### Critical Next Steps
-1. Create `tailwind.config.js` and `postcss.config.js` in project root (required for Tailwind to work)
-2. Update [src/index.css](../src/index.css) to include Tailwind directives: `@tailwind base; @tailwind components; @tailwind utilities;`
-3. Create `craco.config.js` to wire PostCSS into CRA build pipeline
-4. Reference: See official [Tailwind CRA integration guide](https://tailwindcss.com/docs/guides/create-react-app)
+### Configuration Overview
+- `tsconfig.json` - Strict TypeScript settings, ES2020 target, path aliases (`@/*` → `src/*`)
+- `tailwind.config.js` - Scans .tsx/.ts files in src/
+- `postcss.config.js` - PostCSS plugin chain (Tailwind + Autoprefixer)
+- `craco.config.js` - Wires PostCSS into CRA build
 
 ## Development Workflow
 
@@ -40,44 +42,103 @@ npm run eject  # ⚠️ One-way operation - extracts webpack config
 
 ## Code Patterns & Conventions
 
-### React Components
-- **Style:** Functional components (no class components in current codebase)
-- **Export:** Named function export + `export default` pattern (see [src/App.js](../src/App.js))
-- **Styling approach:** Will transition to Tailwind utility classes once configured (currently using CSS modules in `App.css`)
+### Language:** TypeScript (.tsx files for components)
+- **Style:** Functional components with return type `React.JSX.Element`
+- **Export:** Default export pattern (see [src/App.tsx](../src/App.tsx))
+- **Typing:** Use explicit function return types and prop interfaces
 
-### CSS Architecture
-**Before Tailwind config is complete:** CSS Modules in `src/` folder
-**After Tailwind setup:** Prefer Tailwind utility classes over inline CSS; reserve `*.css` for global styles only
+Example:
+```typescript
+// src/components/Button.tsx
+interface ButtonProps {
+  label: string;
+  onClick: () => void;
+}
 
-### import Statements
-- React, React-DOM imports required in files using JSX (React 19 allows skipping in some cases but best practice is explicit)
-- CSS imports use relative paths: `import './App.css'`
-- SVG/assets: Use direct import statements (webpack handles bundling)
+function Button({ label, onClick }: ButtonProps): React.JSX.Element {
+  return <button onClick={onClick}>{label}</button>;
+}
+Testing Setup
+- Framework: Jest (via react-scripts)
+- Testing Library: React + DOM utilities with TypeScript support
+- Test files: `*.test.tsx` pattern (co-located with source)
+- Config: [src/setupTests.ts](../src/setupTests.ts) - Imports @testing-library/jest-dom matchers
+- Run: `npm test` watches for changes, press `a` to run all tests
 
-## Testing & Validation
+Example test file:
+```typescript
+// src/App.test.tsx
+import { render, screen } from '@testing-library/react';
+import App from './App';
 
-### ESLint
-- Config: Extends `react-app` and `react-app/jest` presets (defined in package.json eslintConfig)
-- Run validation: `npm test` shows linting errors alongside test results
+test('renders learn react link', () => {
+  render(<App />);
+  const link = screen.getByText(/learn react/i);
+  expect(link).toBeInTheDocument();
+});
+```
+
+### TypeScript Linting
+- ESLint: Extends `react-app` and `react-app/jest` presets
+- Type checking: `tsc --noEmit` validates TypeScript without output
+- Strict settings enabled via [tsconfig.json](../tsconfig.json)
 
 ### Performance Monitoring
-- File: [src/reportWebVitals.js](../src/reportWebVitals.js) - Measures Core Web Vitals
-- Integration: Called in [index.js](../src/index.js) but currently unused (can pass `console.log` or send to analytics)
+- File: [src/reportWebVitals.ts](../src/reportWReact 19 JSX transform
+- **TypeScript 4.9.5** - Type safety with strict mode enabled
+- **react-scripts 5.0.1** - Abstraction layer for webpack/babel/eslint/typescript
+- **@craco/craco 7.1.0** - CRA configuration extension for custom PostCSS pipeline
+- **Tailwind CSS 4.1.18** - Utility-first CSS framework with PostCSS integration
+- **Testing Library** - DOM + React testing with TypeScript support/>`
 
-## Key Dependencies
-- **React 19.2.4** - Latest major version with minor syntax improvements
-- **react-scripts 5.0.1** - Abstraction layer for webpack/babel/eslint configs
-- **Testing Library** - DOM + React testing (prefer for integration tests over enzyme)
-- **Tailwind CSS 4.1.18** - Pending configuration to integrate with build
+### Type Safety
+- Strict mode enabled: Alas `.tsx` (e.g., `src/components/Button.tsx`)
+2. Define prop interface with TypeScript
+3. Export function with explicit return type `React.JSX.Element`
+4. Use Tailwind utility classes for styling
+5. Add corresponding `.test.tsx` test file
 
-## Common AI Agent Tasks
+Example:
+```typescript
+// src/components/Card.tsx
+interface CardProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+function Card({ title, children }: CardProps): React.JSX.Element {
+  return (
+    <div className="p-4 border border-gray-200 rounded-lg shadow">
+      <h2 className="text-lg font-bold">{title}</h2>
+      {children}
+    </div>
+  );
+}
+
+export default Card;
+```
+
+### Modifying Styling
+1. **Global styles:** Update [src/index.css](../src/index.css)
+2. **Component styles:** Use Tailwind utilities in className attributes
+3. Avoid creating new `.css` files for component-specific styling
+
+### Type Checking & Validation
+```bash
+npm test                   # Run tests with type checking
+npm run build              # Full production build with TS verification
+npx tsc --noEmit           # Type check without emitting output
+```
+
+### Port Aliases
+Use `@/*` alias to import from src: `import Button from '@/components/Button'`
 
 ### Adding New Components
 1. Create component file in `src/` as `.js` (e.g., `src/Button.js`)
 2. Use functional component with default export
 3. Once Tailwind is configured, use utility classes for styling instead of CSS files
 4. Add corresponding `.test.js` file for coverage
-
+React 19 + TypeScript + Tailwind CSS configur
 ### Modifying Styling
 1. **Global styles:** Update [src/index.css](../src/index.css)
 2. **Component styles:** Use Tailwind utilities (preferred) or component-scoped CSS modules
