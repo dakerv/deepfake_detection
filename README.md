@@ -1,3 +1,8 @@
+# Deepfake Image Detection Using Convolutional Neural Networks and Generation Pattern Analysis
+
+Monorepo scaffold for frontend (React + TypeScript) and backend (Flask + PyTorch).
+
+See `docs/SETUP.md` for backend setup instructions.
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
