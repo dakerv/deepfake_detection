@@ -1,75 +1,93 @@
 # Deepfake Image Detection Using Convolutional Neural Networks and Generation Pattern Analysis
 
-Monorepo scaffold for frontend (React + TypeScript) and backend (Flask + PyTorch).
+This repository contains my final-year project: an image-based deepfake detection application that classifies images as real or fake and also provides a likely generation-type inference (for example: face-swapped vs fully synthetic). The goal is to build a usable, explainable tool that demonstrates model training, backend inference, and a simple user interface.
 
-See `docs/SETUP.md` for backend setup instructions.
-# Getting Started with Create React App
+Why this matters
+-----------------
+Deepfakes—realistic synthetic or manipulated faces—are increasingly used in misinformation, harassment, and fraud. Automated detection tools help reduce the spread of harmful content by flagging manipulated media. This project focuses on still-image detection and a pragmatic, defensible feature: inferring the likely generation family (face-swap vs fully synthetic) rather than claiming exact attribution.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+What this project does
+---------------------
+- Provides a React + TypeScript frontend for image upload and result display.
+- Runs a Flask backend that preprocesses images and performs model inference with PyTorch.
+- Uses transfer learning (EfficientNet-B0) with a 3-class output: Real / Face-swapped / Fully synthetic.
+- Includes training scripts to fine-tune the model on labeled images (extracted frames from datasets such as FaceForensics++).
 
-## Available Scripts
+Repository layout
+-----------------
+- `frontend/` — React UI (deploy to Vercel)
+- `backend/` — Flask API, preprocessing utilities, model wrapper and requirements
+- `ml_models/` — training scripts and utilities (EfficientNet skeleton)
+- `data/` — dataset notes and small examples (do NOT commit large datasets)
+- `docs/` — setup and deployment notes (see `docs/SETUP.md`)
 
-In the project directory, you can run:
+Quick start (development)
+-------------------------
+1. Activate the project virtual environment (PowerShell example):
 
-### `npm start`
+```powershell
+cd C:\Users\ELITEBOOK\is-this-real
+venv\Scripts\Activate.ps1
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Install backend dependencies (inside venv):
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+pip install -r backend/requirements.txt
+```
 
-### `npm test`
+3. Run the backend API (development):
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+python backend/app.py
+# backend listens on http://0.0.0.0:8000
+```
 
-### `npm run build`
+4. Test the analyze endpoint (replace with your image):
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+curl -X POST http://localhost:8000/analyze-image -F "image=@path/to/your.jpg"
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Training (smoke test)
+---------------------
+Prepare a small dataset for a quick smoke run:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+data/sample_images/real/*.jpg
+data/sample_images/face_swapped/*.jpg
+data/sample_images/synthetic/*.jpg
+```
 
-### `npm run eject`
+Run a single-epoch training pass:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+python ml_models/train.py data/sample_images --epochs 1
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This saves a model snapshot to `backend/models/model.pth`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Datasets and classes
+--------------------
+Primary dataset used for model experiments: FaceForensics++ (frames extracted and treated as images). The project groups manipulation types into three classes for training and inference:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Class 0 — Real:** Unmanipulated images
+- **Class 1 — Face-swapped deepfake:** FaceSwap / Face2Face / DeepFakes-style manipulations
+- **Class 2 — Fully synthetic / heavily manipulated:** NeuralTextures and fully generated faces
 
-## Learn More
+Ethics and limitations
+----------------------
+This system provides probabilistic inferences, not legal or forensic proof. It does not identify creators, locations, or specific software used to generate an image. All results should include a clear disclaimer and be interpreted as supportive signals rather than definitive evidence.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Next steps you can ask me to implement
+-------------------------------------
+- Wire model-loading into `backend/app.py` so `/analyze-image` returns actual predictions.
+- Add face detection and cropping (OpenCV or MTCNN) in `backend/utils/preprocessing.py`.
+- Build a small frontend upload component and connect it to the API.
+- Prepare deployment files for Hugging Face Spaces or other free hosting for the backend demo.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+See `docs/SETUP.md` for more detailed instructions and development notes.
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Contact
+-------
+This project was created as a final-year submission. If you need help or want new features, open an issue or message me.
