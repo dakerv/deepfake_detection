@@ -79,15 +79,6 @@ Ethics and limitations
 ----------------------
 This system provides probabilistic inferences, not legal or forensic proof. It does not identify creators, locations, or specific software used to generate an image. All results should include a clear disclaimer and be interpreted as supportive signals rather than definitive evidence.
 
-Next steps you can ask me to implement
--------------------------------------
-- Wire model-loading into `backend/app.py` so `/analyze-image` returns actual predictions.
-- Add face detection and cropping (OpenCV or MTCNN) in `backend/utils/preprocessing.py`.
-- Build a small frontend upload component and connect it to the API.
-- Prepare deployment files for Hugging Face Spaces or other free hosting for the backend demo.
-
-See `docs/SETUP.md` for more detailed instructions and development notes.
-
 Contact
 -------
 This project was created as a final-year submission. If you need help or want new features, open an issue or message me.
