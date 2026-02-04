@@ -69,7 +69,7 @@ This saves a model snapshot to `backend/models/model.pth`.
 
 Datasets and classes
 --------------------
-Primary dataset used for model experiments: FaceForensics++ (frames extracted and treated as images). The project groups manipulation types into three classes for training and inference:
+The primary dataset used for model experiments: FaceForensics++ (frames extracted and treated as images). The project groups manipulation types into three classes for training and inference:
 
 - **Class 0 — Real:** Unmanipulated images
 - **Class 1 — Face-swapped deepfake:** FaceSwap / Face2Face / DeepFakes-style manipulations
@@ -78,15 +78,6 @@ Primary dataset used for model experiments: FaceForensics++ (frames extracted an
 Ethics and limitations
 ----------------------
 This system provides probabilistic inferences, not legal or forensic proof. It does not identify creators, locations, or specific software used to generate an image. All results should include a clear disclaimer and be interpreted as supportive signals rather than definitive evidence.
-
-Next steps you can ask me to implement
--------------------------------------
-- Wire model-loading into `backend/app.py` so `/analyze-image` returns actual predictions.
-- Add face detection and cropping (OpenCV or MTCNN) in `backend/utils/preprocessing.py`.
-- Build a small frontend upload component and connect it to the API.
-- Prepare deployment files for Hugging Face Spaces or other free hosting for the backend demo.
-
-See `docs/SETUP.md` for more detailed instructions and development notes.
 
 Contact
 -------
