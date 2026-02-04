@@ -1,7 +1,7 @@
-from PIL import Image
-import torchvision.transforms as transforms
+from PIL import Image #used for image loading and processing
+import torchvision.transforms as transforms #used for image transformations, standard image preparation steps
 
-def preprocess_image(path: str):
+def preprocess_image(path: str): #define a function to preprocess an image given its file path, #output is a tensor suitable for model input
     """Minimal preprocessing: load image, convert to RGB, resize to 224x224 and return tensor-compatible PIL image.
     Replace with face-detection + alignment later.
     """
